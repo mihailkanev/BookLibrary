@@ -1,5 +1,6 @@
 package book.com.library.controller;
 
+import book.com.library.dto.BookDTO;
 import book.com.library.model.Book;
 import book.com.library.service.BookService;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,8 @@ public class BookController {
     @Autowired
     private BookService bookService;
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks(){
-        List<Book> books = bookService.getAllBooks();
+    public ResponseEntity<List<BookDTO>> getAllBooks(){
+        List<BookDTO> books = bookService.getAllBooks();
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 }
