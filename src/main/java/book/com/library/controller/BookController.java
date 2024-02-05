@@ -20,41 +20,62 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
-        List<BookDTO> books = bookService.getAllBooks();
-        return new ResponseEntity<>(books, HttpStatus.OK);
+        try {
+            List<BookDTO> books = bookService.getAllBooks();
+            return new ResponseEntity<>(books, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable Long id) {
-        BookDTO bookDTO = bookService.getBookById(id);
+        try {
+            BookDTO bookDTO = bookService.getBookById(id);
 
-        if (bookDTO != null) {
-            return new ResponseEntity<>(bookDTO, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (bookDTO != null) {
+                return new ResponseEntity<>(bookDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping
     public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
-        BookDTO createdBook = bookService.createBook(bookDTO);
-        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+        try {
+            BookDTO createdBook = bookService.createBook(bookDTO);
+            return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO updatedBookDTO) {
-        BookDTO updateBook = bookService.updateBook(id, updatedBookDTO);
+    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @RequestBody BookDTO updatedBookDTO) {
 
-        if (updateBook != null) {
-            return new ResponseEntity<>(updateBook, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(updateBook, HttpStatus.NOT_FOUND);
+        try {
+            BookDTO updateBook = bookService.updateBook(id, updatedBookDTO);
+
+            if (updateBook != null) {
+                return new ResponseEntity<>(updateBook, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(updateBook, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
-        bookService.deleteBookById(id);
-        return new ResponseEntity<>("Book was deleted successfully", HttpStatus.OK);
+    public ResponseEntity<String> deleteBookById(@PathVariable Long id) {
+        try {
+            bookService.deleteBookById(id);
+            return new ResponseEntity<>("Book was deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
