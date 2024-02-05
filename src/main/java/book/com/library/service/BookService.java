@@ -5,7 +5,6 @@ import book.com.library.model.Author;
 import book.com.library.model.Book;
 import book.com.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,4 +27,8 @@ public class BookService {
         return bookRepository.findByTitleAndAuthor(title, author);
     }
 
-}
+    public BookDTO getBookById(Long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        return optionalBook.map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthorName())).orElse(null);
+    }
+    }
