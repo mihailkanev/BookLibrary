@@ -31,4 +31,14 @@ public class BookService {
         Optional<Book> optionalBook = bookRepository.findById(id);
         return optionalBook.map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthorName())).orElse(null);
     }
+
+    public BookDTO createBook(BookDTO bookDTO) {
+        Book newBook = new Book();
+        newBook.setTitle(bookDTO.getTitle());
+        newBook.setAuthorName(bookDTO.getAuthor());
+
+        Book savedBook = bookRepository.save(newBook);
+        return new BookDTO(savedBook.getId(), savedBook.getTitle(), savedBook.getAuthorName());
+
     }
+}
