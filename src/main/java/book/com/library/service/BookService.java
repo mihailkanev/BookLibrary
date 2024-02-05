@@ -19,7 +19,7 @@ public class BookService {
     public List<BookDTO> getAllBooks() {
         List<Book> books = bookRepository.findAll();
 
-        return books.stream().map(book -> new BookDTO(book.getId(), book.getTitle(),book.getAuthorName()))
+        return books.stream().map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthorName()))
                 .collect(Collectors.toList());
     }
 
@@ -40,5 +40,21 @@ public class BookService {
         Book savedBook = bookRepository.save(newBook);
         return new BookDTO(savedBook.getId(), savedBook.getTitle(), savedBook.getAuthorName());
 
+    }
+
+
+    public BookDTO updateBook(Long id, BookDTO updatedBookDTO) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+
+        if (optionalBook.isPresent()) {
+            Book existingBook = optionalBook.get();
+            existingBook.setTitle(updatedBookDTO.getTitle());
+            existingBook.setAuthorName(updatedBookDTO.getAuthor());
+
+            Book updatedBook = bookRepository.save(existingBook);
+            return new BookDTO(updatedBook.getId(), updatedBook.getTitle(), updatedBook.getAuthorName());
+        } else {
+            return null;
+        }
     }
 }
