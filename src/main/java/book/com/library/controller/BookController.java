@@ -36,9 +36,20 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO>createBook(@RequestBody BookDTO bookDTO){
+    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
         BookDTO createdBook = bookService.createBook(bookDTO);
-        return new ResponseEntity<>(createdBook,HttpStatus.CREATED);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDTO> updateBook(@PathVariable Long id, @RequestBody BookDTO updatedBookDTO) {
+        BookDTO updateBook = bookService.updateBook(id, updatedBookDTO);
+
+        if (updateBook != null) {
+            return new ResponseEntity<>(updateBook, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(updateBook, HttpStatus.NOT_FOUND);
+        }
     }
 
 }
