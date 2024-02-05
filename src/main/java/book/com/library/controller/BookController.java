@@ -52,4 +52,9 @@ public class BookController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+        bookService.deleteBookById(id);
+        return new ResponseEntity<>("Book was deleted successfully", HttpStatus.OK);
+    }
 }
