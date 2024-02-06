@@ -48,4 +48,20 @@ public class AuthorService {
             throw new RuntimeException("Error retrieving author by ID", e);
         }
     }
+
+    public List<AuthorDTO> searchAuthorByFirstLetter(char letter) {
+        try {
+            List<Author> authors = authorRepository.findByNameStartingWithIgnoreCase(letter);
+            if (authors.isEmpty()) {
+                System.out.println("No authors found with letter: " + letter);
+                throw new RuntimeException("No authors found with the specified letter");
+            }
+            return authors.stream()
+                    .map(author -> new AuthorDTO(author.getName()))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.err.println("Error searching authors by letter: " + e.getMessage());
+            throw new RuntimeException("Error searching authors by letter", e);
+        }
+    }
 }
