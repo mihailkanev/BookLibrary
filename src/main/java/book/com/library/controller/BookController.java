@@ -1,26 +1,25 @@
 package book.com.library.controller;
 
 import book.com.library.dto.BookDTO;
-import book.com.library.model.Book;
 import book.com.library.service.BookService;
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/books")
+@Validated
 public class BookController {
     @Autowired
     private BookService bookService;
-
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         try {
@@ -47,7 +46,10 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             BookDTO createdBook = bookService.createBook(bookDTO);
             return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
@@ -57,8 +59,11 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @RequestBody BookDTO updatedBookDTO) {
-
+    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id,@Valid @RequestBody BookDTO updatedBookDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // Handle validation errors
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             BookDTO updateBook = bookService.updateBook(id, updatedBookDTO);
 
