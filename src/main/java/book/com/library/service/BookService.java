@@ -5,6 +5,8 @@ import book.com.library.model.Author;
 import book.com.library.model.Book;
 import book.com.library.repository.BookRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -96,6 +98,14 @@ public class BookService {
                         .collect(Collectors.toList());            }
         } catch (Exception e) {
             throw new RuntimeException("Error finding books by title", e);
+        }
+    }
+    public Page<BookDTO> getAllBooksPaginated(Pageable pageable) {
+        try {
+            Page<Book> booksPage = bookRepository.findAll(pageable);
+            return booksPage.map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthorName()));
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving paginated books", e);
         }
     }
 }
