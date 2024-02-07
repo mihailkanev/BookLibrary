@@ -26,11 +26,10 @@ public class BookService {
         }
     }
 
-    public List<Book> findByTitleAndAuthor(String title, Author author) {
+    public List<Book> findByTitle(String title, Author author) {
         try {
             return bookRepository.findByTitleAndAuthor(title, author);
         } catch (Exception e) {
-            // Custom exception handling, logging, or rethrowing
             throw new RuntimeException("Error finding books by title and author", e);
         }
     }
@@ -81,6 +80,22 @@ public class BookService {
             bookRepository.deleteById(id);
         } catch (Exception e) {
             throw new RuntimeException("Error deleting book by ID", e);
+        }
+    }
+
+
+    public List<BookDTO> findBookByTitle(String title) {
+        try {
+            System.out.println("Searching for books with title: " + title);
+            List<Book> books = bookRepository.findBookByTitleContainingIgnoreCase(title);
+            if (books.isEmpty()) {
+                throw new RuntimeException("No books found with the specified letter");
+            } else {
+                return books.stream()
+                        .map(book -> new BookDTO(book.getId(), book.getTitle(), book.getAuthorName()))
+                        .collect(Collectors.toList());            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding books by title", e);
         }
     }
 }
