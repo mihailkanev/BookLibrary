@@ -2,15 +2,19 @@ package book.com.library.controller;
 
 import book.com.library.dto.AuthorDTO;
 import book.com.library.service.AuthorService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/authors")
+@Validated
 public class AuthorController {
     @Autowired
     private AuthorService authorService;
@@ -40,7 +44,8 @@ public class AuthorController {
     }
 
     @GetMapping("/search-by-letter")
-    public ResponseEntity<List<AuthorDTO>> searchAuthorByFirstLetter(@RequestParam char letter) {
+    public ResponseEntity<List<AuthorDTO>> searchAuthorByFirstLetter(@RequestParam
+        @Pattern(regexp = "A-Za-z", message = "Invalid letter format") char letter) {
         try {
             List<AuthorDTO> authors = authorService.searchAuthorByFirstLetter(letter);
             if (authors.isEmpty()) {
