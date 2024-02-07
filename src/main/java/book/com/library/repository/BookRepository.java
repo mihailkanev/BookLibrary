@@ -13,5 +13,8 @@ import java.util.Optional;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findByTitleAndAuthor(String title, Author author);
+
+    List<Book> findBookByTitleContainingIgnoreCase(String title);
     Book save(BookDTO bookDTO);
+
 }
